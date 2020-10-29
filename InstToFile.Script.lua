@@ -930,13 +930,7 @@ F2I.ClickableWhenViewportHidden = true
 
 local Connected
 
-if game:GetService( "ReplicatedStorage" ):FindFirstChild( "SyncPlaceId" ) and game:GetService( "ReplicatedStorage" ):FindFirstChild( "SyncPlaceId" ).Value == "" then
-	
-	game:GetService( "ReplicatedStorage" ):FindFirstChild( "SyncPlaceId" ):Destroy( )
-	
-end
-
-if game:GetService( "ReplicatedStorage" ):FindFirstChild( "SyncPath" ) then game:GetService( "ReplicatedStorage" ):FindFirstChild( "SyncPath" ):Destroy( ) end
+local PlaceId = game:GetService("ServerStorage"):FindFirstChild("Inst2File_PlaceId") and game:GetService("ServerStorage")["Inst2File_PlaceId"].Value or game.PlaceId
 
 for a = 1, 2 do
 	
@@ -1000,7 +994,7 @@ for a = 1, 2 do
 						
 						if a == 1 then
 							
-							local Ran, Error = pcall( function ( ) return HttpService:RequestAsync{ Url = "http://localhost:8888/?placeid=" .. game.PlaceId, Body = json, Method = "POST" } end )
+							local Ran, Error = pcall( function ( ) return HttpService:RequestAsync{ Url = "http://localhost:8888/?placeid=" .. PlaceId, Body = json, Method = "POST" } end )
 							
 							if not Ran then error( Error ) end
 							
@@ -1010,7 +1004,7 @@ for a = 1, 2 do
 							
 						else
 							
-							local Ran, Error = pcall( function ( ) return HttpService:RequestAsync{ Url = "http://localhost:8888/?placeid=" .. ( game:GetService( "ReplicatedStorage" ):FindFirstChild( "SyncPlaceId" ) and game:GetService( "ReplicatedStorage" ):FindFirstChild( "SyncPlaceId" ).Value or game.PlaceId ) .. "\\", Method = "GET" } end )
+							local Ran, Error = pcall( function ( ) return HttpService:RequestAsync{ Url = "http://localhost:8888/?placeid=" .. ( game:GetService( "ReplicatedStorage" ):FindFirstChild( "SyncPlaceId" ) and game:GetService( "ReplicatedStorage" ):FindFirstChild( "SyncPlaceId" ).Value or PlaceId ) .. "\\", Method = "GET" } end )
 							
 							if not Ran then error( Error ) end
 							
