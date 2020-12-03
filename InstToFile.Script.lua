@@ -1,6 +1,6 @@
-if game:GetService( "RunService" ):IsRunning( ) then return end
+if game:GetService("RunService"):IsRunning() then return end
 
-local CollectionService, HttpService, Selection = game:GetService( "CollectionService" ), game:GetService( "HttpService" ), game:GetService( "Selection" )
+local CollectionService, HttpService, Selection = game:GetService("CollectionService"), game:GetService("HttpService"), game:GetService("Selection")
 
 local CoroutineErrorHandling = require(game:GetService("ReplicatedStorage"):FindFirstChild("CoroutineErrorHandling") and game:GetService("ReplicatedStorage").CoroutineErrorHandling:FindFirstChild("MainModule") or game:GetService("ServerStorage"):FindFirstChild("CoroutineErrorHandling") and game:GetService("ServerStorage").CoroutineErrorHandling:FindFirstChild("MainModule") or 4851605998)
 
@@ -10,7 +10,7 @@ local Properties = {}
 local NoVal, NilVal = {}, {}
 
 do
-	local Superclass, ExcludedTags, ExcludedProperties = {}, {Deprecated = true, ReadOnly = true, Hidden = true }, {Parent = true, ClassName = true, Source = true, Name = true }
+	local Superclass, ExcludedTags, ExcludedProperties = {}, {Deprecated = true, ReadOnly = true, Hidden = true}, {Parent = true, ClassName = true, Source = true, Name = true}
 	
 	local function InstanceNew(Class)
 		return Instance.new(Class)
@@ -21,7 +21,7 @@ do
 	end
 	
 	for _, Class in ipairs(Classes) do
-		local Props = {Archivable = true }
+		local Props = {Archivable = true}
 		
 		local Inst
 		local Ran, Val = pcall(InstanceNew, Class.Name)
@@ -81,19 +81,19 @@ end
 for a, b in pairs(Properties) do
 	local Props = {}
 	for c, d in pairs(b) do
-		Props[#Props + 1] = {c, d }
+		Props[#Props + 1] = {c, d}
 	end
 	Properties[a] = Props
 end
 
-local Stringify = require( 2789644632 )
-local SyncLocations = { game.ReplicatedStorage, game.ServerScriptService, game.ServerStorage, game.StarterGui, game.StarterPack, game.StarterPlayer }
+local Stringify = require(2789644632)
+local SyncLocations = {game.ReplicatedStorage, game.ServerScriptService, game.ServerStorage, game.StarterGui, game.StarterPack, game.StarterPlayer}
 
-local function GetRelativePath( Obj1, Obj2 )
+local function GetRelativePath(Obj1, Obj2)
 	
 	local Ancestor = Obj1
 	
-	while not Obj2:IsDescendantOf( Ancestor ) do
+	while not Obj2:IsDescendantOf(Ancestor) do
 		
 		Ancestor = Ancestor.Parent
 		
@@ -115,7 +115,7 @@ local function GetRelativePath( Obj1, Obj2 )
 	
 	while Par ~= Ancestor do
 		
-		Str2 = "[" .. Stringify( Par.Name ) .. "]" .. Str2
+		Str2 = "[" .. Stringify(Par.Name) .. "]" .. Str2
 		
 		Par = Par.Parent
 		
@@ -127,8 +127,8 @@ end
 
 local function GetUUID(Obj, Silent)
 	local Tags = {}
-	for _, Tag in ipairs(type( Obj ) == "table" and Obj or CollectionService:GetTags(Obj)) do
-		if Tag:sub( 1, 4 ) == "I2F_" then
+	for _, Tag in ipairs(type(Obj) == "table" and Obj or CollectionService:GetTags(Obj)) do
+		if Tag:sub(1, 4) == "I2F_" then
 			Tags[#Tags + 1] = Tag
 		end
 	end
@@ -168,47 +168,47 @@ end
 
 
 
-local function GetModifiedProperties( Obj, InstanceRefs )
+local function GetModifiedProperties(Obj, InstanceRefs)
 	
-	local Modified = { }
+	local Modified = {}
 	
 	local FoundInstances
 	
-	for _, Property in ipairs(Properties[ Obj.ClassName ]) do
+	for _, Property in ipairs(Properties[Obj.ClassName]) do
 		
-		local Prop = Property[ 1 ]
+		local Prop = Property[1]
 		
-		local Val = Obj[ Prop ]
+		local Val = Obj[Prop]
 		
-		if typeof( Val ) == "Instance" then
+		if typeof(Val) == "Instance" then
 			
 			FoundInstances = true
 			
-			InstanceRefs[ Obj ] = InstanceRefs[ Obj ] or { }
+			InstanceRefs[Obj] = InstanceRefs[Obj] or {}
 			
-			InstanceRefs[ Obj ][ Prop ] = Val
+			InstanceRefs[Obj][Prop] = Val
 			
-		elseif Val ~= Property[ 2 ] and not ( Val == nil and Property[ 2 ] == NilVal ) then
+		elseif Val ~= Property[2] and not (Val == nil and Property[2] == NilVal) then
 			
-			Modified[ Prop ] = Val
+			Modified[Prop] = Val
 			
 		end
 		
 	end
 	
-	if not GetUUID( Obj ) then
+	if not GetUUID(Obj) then
 		
-		CollectionService:AddTag( Obj, "I2F_" .. HttpService:GenerateGUID( false ) )
+		CollectionService:AddTag(Obj, "I2F_" .. HttpService:GenerateGUID(false))
 		
 	end
 	
-	Modified.Tags = CollectionService:GetTags( Obj )
+	Modified.Tags = CollectionService:GetTags(Obj)
 	
 	return Modified, FoundInstances
 	
 end
 
-local function CreateFromProperties( Name, ClassName, Parent, Properties, ExistingObj )
+local function CreateFromProperties(Name, ClassName, Parent, Properties, ExistingObj)
 	
 	local Obj
 	
@@ -216,11 +216,11 @@ local function CreateFromProperties( Name, ClassName, Parent, Properties, Existi
 		
 		Obj = ExistingObj
 		
-		local Clone = Obj:Clone( )
+		local Clone = Obj:Clone()
 		
-		Clone:ClearAllChildren( )
+		Clone:ClearAllChildren()
 		
-		for _, Kid in ipairs( Obj:GetChildren( )) do
+		for _, Kid in ipairs(Obj:GetChildren()) do
 			
 			Kid.Parent = Clone
 			
@@ -230,7 +230,7 @@ local function CreateFromProperties( Name, ClassName, Parent, Properties, Existi
 		
 	else
 		
-		Obj = Instance.new( ClassName )
+		Obj = Instance.new(ClassName)
 		
 	end
 	
@@ -240,7 +240,7 @@ local function CreateFromProperties( Name, ClassName, Parent, Properties, Existi
 		
 		for _, Tag in ipairs(Properties.Tags) do
 			
-			CollectionService:AddTag( Obj, Tag )
+			CollectionService:AddTag(Obj, Tag)
 			
 		end
 		
@@ -248,9 +248,9 @@ local function CreateFromProperties( Name, ClassName, Parent, Properties, Existi
 		
 	end
 	
-	for a, b in pairs( Properties ) do
+	for a, b in pairs(Properties) do
 		
-		Obj[ a ] = b
+		Obj[a] = b
 		
 	end
 	
@@ -260,15 +260,15 @@ local function CreateFromProperties( Name, ClassName, Parent, Properties, Existi
 	
 end
 
-local function FindFirstChildOfNameAndClass( Parent, Name, ClassName )
+local function FindFirstChildOfNameAndClass(Parent, Name, ClassName)
 	
-	for _, Kid in ipairs(Parent:GetChildren( )) do
+	for _, Kid in ipairs(Parent:GetChildren()) do
 		
-		local Ran, Result = pcall( function ( ) if Kid.Name == Name and Kid.ClassName == ClassName then
+		local Ran, Result = pcall(function() if Kid.Name == Name and Kid.ClassName == ClassName then
 			
 			return true
 			
-		end end )
+		end end)
 		
 		if Ran and Result then return Kid end
 		
@@ -276,23 +276,23 @@ local function FindFirstChildOfNameAndClass( Parent, Name, ClassName )
 	
 end
 
-local function GetNameClassAndType( Str )
+local function GetNameClassAndType(Str)
 	
-	local LastDot = Str:match( "^.*()%." )
+	local LastDot = Str:match("^.*()%.")
 	
 	if LastDot then
 		
-		local Name, ClassName = Str:sub( 1, LastDot - 1 ), Str:sub( LastDot + 1 )
+		local Name, ClassName = Str:sub(1, LastDot - 1), Str:sub(LastDot + 1)
 		
 		if ClassName == "lua" or ClassName == "properties" then
 			
 			local Type = ClassName
 			
-			LastDot = Name:match( "^.*()%." )
+			LastDot = Name:match("^.*()%.")
 			
 			if LastDot then
 				
-				Name, ClassName = Name:sub( 1, LastDot - 1 ), Name:sub( LastDot + 1 )
+				Name, ClassName = Name:sub(1, LastDot - 1), Name:sub(LastDot + 1)
 				
 				return Name, ClassName, Type
 				
@@ -316,29 +316,29 @@ local function GetNameClassAndType( Str )
 	
 end
 
-local function FromJSON( SyncTable, First )
+local function FromJSON(SyncTable, First)
 	
 	if First == nil then
 		
-		SyncTable = HttpService:JSONDecode( SyncTable )
+		SyncTable = HttpService:JSONDecode(SyncTable)
 		
 	end
 	
-	for a, b in pairs( SyncTable ) do
+	for a, b in pairs(SyncTable) do
 		
-		if type( b ) == "string" then
+		if type(b) == "string" then
 			
-			local _, _, Type = GetNameClassAndType( a )
+			local _, _, Type = GetNameClassAndType(a)
 			
 			if Type == "properties" then
 				
-				SyncTable[ a ] = loadstring( "return " .. b )( )
+				SyncTable[a] = loadstring("return " .. b)()
 				
 			end
 			
 		else
 			
-			FromJSON( b, false )
+			FromJSON(b, false)
 			
 		end
 		
@@ -352,27 +352,27 @@ local function FromJSON( SyncTable, First )
 	
 end
 
-local function ToJSON( SyncTable, First )
+local function ToJSON(SyncTable, First)
 	
-	for a, b in pairs( SyncTable ) do
+	for a, b in pairs(SyncTable) do
 		
-		local _, _, Type = GetNameClassAndType( a )
+		local _, _, Type = GetNameClassAndType(a)
 		
 		if Type then
 			
-			if type( b ) ~= "string" then
+			if type(b) ~= "string" then
 				
 				local Str = "{"
 				
-				local Properties, InstanceRefs = b[ 1 ], b[ 2 ]
+				local Properties, InstanceRefs = b[1], b[2]
 				
 				if Properties then
 					
 					Str = Str .. "{"
 					
-					local Keys, Tags = { }, nil
+					local Keys, Tags = {}, nil
 					
-					for a, b in pairs( Properties ) do
+					for a, b in pairs(Properties) do
 						
 						if a == "Tags" then
 							
@@ -382,23 +382,23 @@ local function ToJSON( SyncTable, First )
 							
 						else
 							
-							Keys[ #Keys + 1 ] = a
+							Keys[#Keys + 1] = a
 							
 						end
 						
 					end
 					
-					table.sort( Keys )
+					table.sort(Keys)
 					
-					Keys[ #Keys + 1 ] = Tags
+					Keys[#Keys + 1] = Tags
 					
 					for k, Key in ipairs(Keys) do
 						
-						Str = Str .. Key .. " = " .. Stringify( Properties[ Key ], nil, { Space = " ", Tab = "", SecondaryNewLine = "", NewLine = "", BeforeTable = false, AfterTable = false } ) .. ( k == #Keys and "" or ", " )
+						Str = Str .. Key .. " = " .. Stringify(Properties[Key], nil, {Space = " ", Tab = "", SecondaryNewLine = "", NewLine = "", BeforeTable = false, AfterTable = false}) .. (k == #Keys and "" or ", ")
 						
 					end
 					
-					Str = Str .. "}" .. ( InstanceRefs and ", " or "" )
+					Str = Str .. "}" .. (InstanceRefs and ", " or "")
 					
 				end
 				
@@ -406,19 +406,19 @@ local function ToJSON( SyncTable, First )
 					
 					Str = Str .. "{"
 					
-					local Keys = { }
+					local Keys = {}
 					
-					for a, _ in pairs( InstanceRefs ) do
+					for a, _ in pairs(InstanceRefs) do
 						
-						Keys[ #Keys + 1 ] = a
+						Keys[#Keys + 1] = a
 						
 					end
 					
-					table.sort( Keys )
+					table.sort(Keys)
 					
 					for k, Key in ipairs(Keys) do
 						
-						Str = Str .. Key .. " = " .. Stringify( InstanceRefs[ Key ], nil, { Space = " ", Tab = "", SecondaryNewLine = "", NewLine = "", BeforeTable = false, AfterTable = false } ) .. ( k == #Keys and "" or ", " )
+						Str = Str .. Key .. " = " .. Stringify(InstanceRefs[Key], nil, {Space = " ", Tab = "", SecondaryNewLine = "", NewLine = "", BeforeTable = false, AfterTable = false}) .. (k == #Keys and "" or ", ")
 						
 					end
 					
@@ -428,13 +428,13 @@ local function ToJSON( SyncTable, First )
 				
 				Str = Str .. "}"
 				
-				SyncTable[ a ] = Str
+				SyncTable[a] = Str
 				
 			end
 			
 		else
 			
-			ToJSON( b, false )
+			ToJSON(b, false)
 			
 		end
 		
@@ -442,27 +442,27 @@ local function ToJSON( SyncTable, First )
 	
 	if First == nil then
 		
-		return next( SyncTable ) and HttpService:JSONEncode( SyncTable ) or false
+		return next(SyncTable) and HttpService:JSONEncode(SyncTable) or false
 		
 	end
 	
 end
 
-local function ReplaceObjs( Created, Parent )
+local function ReplaceObjs(Created, Parent)
 	
-	local UUID = GetUUID( Created )
+	local UUID = GetUUID(Created)
 	
 	if UUID then
 		
 		local Found
 		
-		for _, Match in ipairs(CollectionService:GetTagged( UUID )) do
+		for _, Match in ipairs(CollectionService:GetTagged(UUID)) do
 			
 			if Match ~= Created then
 				
 				Found = Match.Parent
 				
-				Match:Destroy( )
+				Match:Destroy()
 				
 			end
 			
@@ -478,27 +478,27 @@ local function ReplaceObjs( Created, Parent )
 			
 		else
 			
-			Created.Parent = game:GetService( "ReplicatedStorage" )
+			Created.Parent = game:GetService("ReplicatedStorage")
 			
-			warn( "Could not find the parent of " .. Created:GetFullName( ) .. " so it has been placed in game." .. game:GetService( "ReplicatedStorage" ).Name )
+			warn("Could not find the parent of " .. Created:GetFullName() .. " so it has been placed in game." .. game:GetService("ReplicatedStorage").Name)
 			
 		end
 		
 	else
 		
-		Parent = Parent and FindFirstChildOfNameAndClass( Parent, GetNameClassAndType( Created.Name ) ) or game
+		Parent = Parent and FindFirstChildOfNameAndClass(Parent, GetNameClassAndType(Created.Name)) or game
 		
 		if Parent then
 			
-			for _, Kid in ipairs(Created:GetChildren( )) do
+			for _, Kid in ipairs(Created:GetChildren()) do
 				
-				ReplaceObjs( Kid, Parent )
+				ReplaceObjs(Kid, Parent)
 				
 			end
 			
 		else
 			
-			warn( "Could not sync from " .. Created:GetFullName( ) .. "because parent does not exist" )
+			warn("Could not sync from " .. Created:GetFullName() .. "because parent does not exist")
 			
 		end
 		
@@ -506,7 +506,7 @@ local function ReplaceObjs( Created, Parent )
 	
 end
 
-local function CreateObjs( Parent, Table, InstanceRefs, Objs )
+local function CreateObjs(Parent, Table, InstanceRefs, Objs)
 	
 	local First = InstanceRefs == nil
 	
@@ -516,69 +516,69 @@ local function CreateObjs( Parent, Table, InstanceRefs, Objs )
 		
 		OriginalParent = Parent
 		
-		Parent = Instance.new( "Folder" )
+		Parent = Instance.new("Folder")
 		
 		Parent.Name = OriginalParent.Name
 		
 		Parent.Parent = game.ReplicatedStorage
 		
-		Table = FromJSON( Table )
+		Table = FromJSON(Table)
 		
-		Sel = game:GetService( "Selection" ):Get( )
+		Sel = game:GetService("Selection"):Get()
 		
 		for k, v in ipairs(Sel) do
 			
-			Sel[ k ] = GetUUID( v ) or v
+			Sel[k] = GetUUID(v) or v
 			
 		end
 		
 	end
 	
-	InstanceRefs = InstanceRefs or { }
+	InstanceRefs = InstanceRefs or {}
 	
-	Objs = Objs or { }
+	Objs = Objs or {}
 	
-	local Rename = { }
+	local Rename = {}
 	
-	local Created = { }
+	local Created = {}
 	
-	local Folders, Scripts = { }, { }
+	local Folders, Scripts = {}, {}
 	
-	for a, b in pairs( Table ) do
+	for a, b in pairs(Table) do
 		
-		local Name, ClassName, Type = GetNameClassAndType( a)
+		local Name, ClassName, Type = GetNameClassAndType(a)
 		
 		local Key = Name == ClassName and Name or Name .. "." .. ClassName
 		
-		local Num = ClassName:find( "%%" )
+		local Num = ClassName:find("%%")
 		
 		local UUID
 		
 		if Num then
 			
-			ClassName, UUID = ClassName:sub( 1, Num - 1 ), ClassName:sub( Num + 1 )
+			ClassName, UUID = ClassName:sub(1, Num - 1), ClassName:sub(Num + 1)
 			
 		end
 		
 		if not Type then
 			
-			Folders[ #Folders + 1 ] = { Key, Name, ClassName, b }
+			Folders[#Folders + 1] = {Key, Name, ClassName, b}
 			
 		elseif Type == "properties" then
 			
-			UUID = UUID or GetUUID( b[ 1 ].Tags )
+			UUID = UUID or GetUUID(b[1].Tags)
 			
-			local Obj = CreateFromProperties( Name, ClassName, Parent, b[ 1 ] or { }, CollectionService:GetTagged( UUID )[ 1 ] )
+			local Obj = CreateFromProperties(Name, ClassName, Parent, b[1] or {}, CollectionService:GetTagged(UUID)[1])
 			
-			Objs[ Obj ] = Key
+			Objs[Obj] = Key
 			
-			InstanceRefs[ Obj ] = b[ 2 ]
+			InstanceRefs[Obj] = b[2]
 			
-			Created[ Key ] = Obj
+			Created[Key] = Obj
 			
 		else
 			
-			Scripts[ #Scripts + 1 ] = { Key, Name, ClassName, b }
+			Scripts[#Scripts + 1] = {Key, Name, ClassName, b}
 			
 		end
 		
@@ -586,40 +586,40 @@ local function CreateObjs( Parent, Table, InstanceRefs, Objs )
 	
 	for _, ScriptInfo in ipairs(Scripts) do
 		
-		local Script = Created[ ScriptInfo[ 1 ] ] or Instance.new( ScriptInfo[ 3 ] )
+		local Script = Created[ScriptInfo[1]] or Instance.new(ScriptInfo[3])
 		
-		Script.Name = ScriptInfo[ 2 ]
+		Script.Name = ScriptInfo[2]
 		
-		Script.Source = ScriptInfo[ 4 ]
+		Script.Source = ScriptInfo[4]
 		
 		Script.Parent = Parent
 		
-		Objs[ Script ] = ScriptInfo[ 1 ]
+		Objs[Script] = ScriptInfo[1]
 		
-		Created[ ScriptInfo[ 1 ] ] = Script
+		Created[ScriptInfo[1]] = Script
 		
 		
 	end
 	
-	for a, b in pairs( Folders ) do
+	for a, b in pairs(Folders) do
 		
-		local Obj = Created[ b[ 1 ] ]
+		local Obj = Created[b[1]]
 		
 		if not Obj then
 			
-			Obj = Instance.new( "Folder", Parent )
+			Obj = Instance.new("Folder", Parent)
 			
-			Obj.Name = b[ 2 ] .. "." .. b[ 3 ]
+			Obj.Name = b[2] .. "." .. b[3]
 			
 		end
 		
 		if Obj then
 			
-			CreateObjs( Obj, b[ 4 ], InstanceRefs, Objs )
+			CreateObjs(Obj, b[4], InstanceRefs, Objs)
 			
 		else
 			
-			warn( Parent:GetFullName( ) .. "  -  " .. b[ 2 ] .. "  -  " .. b[ 3 ] .. " does not exist, cannot sync!\nPlease ensure it is tagged as 'ForceSync' if you wish it to sync OR ensure it exists so its scripts may sync" )
+			warn(Parent:GetFullName() .. "  -  " .. b[2] .. "  -  " .. b[3] .. " does not exist, cannot sync!\nPlease ensure it is tagged as 'ForceSync' if you wish it to sync OR ensure it exists so its scripts may sync")
 			
 		end
 		
@@ -627,27 +627,27 @@ local function CreateObjs( Parent, Table, InstanceRefs, Objs )
 	
 	if First then
 		
-		for a, b in pairs( InstanceRefs ) do
+		for a, b in pairs(InstanceRefs) do
 			
-			for c, d in pairs( b ) do
+			for c, d in pairs(b) do
 				
-				if type( d ) == "string" then
+				if type(d) == "string" then
 					
-					local Ran, Error = pcall( function ( )
+					local Ran, Error = pcall(function()
 						
-						a[ c ] = loadstring( d )( a )
+						a[c] = loadstring(d)(a)
 						
-					end )
+					end)
 					
-					if a[ c ] then
+					if a[c] then
 						
 						local Found
 						
-						for _, Kid in ipairs(a[ c ].Parent:GetChildren( )) do
+						for _, Kid in ipairs(a[c].Parent:GetChildren()) do
 							
-							if Kid.Name == a[ c ].Name then
+							if Kid.Name == a[c].Name then
 								
-								if Found then warn( a:GetFullName( ) .. "." .. c .. " may not have synced correctly as multiple objects with the same name exist!" ) break end
+								if Found then warn(a:GetFullName() .. "." .. c .. " may not have synced correctly as multiple objects with the same name exist!") break end
 								
 							end
 							
@@ -655,13 +655,13 @@ local function CreateObjs( Parent, Table, InstanceRefs, Objs )
 						
 					else
 						
-						warn( a:GetFullName( ) .. " failed to sync it's " .. c .. "'s instance reference:\n" .. Error )
+						warn(a:GetFullName() .. " failed to sync it's " .. c .. "'s instance reference:\n" .. Error)
 						
 					end
 					
 				else
 					
-					for e, f in pairs( Objs ) do
+					for e, f in pairs(Objs) do
 						
 						local Par = e
 						
@@ -669,7 +669,7 @@ local function CreateObjs( Parent, Table, InstanceRefs, Objs )
 						
 						for g = #d, 1, -1 do
 							
-							if d[ g ] == Objs[ Par ] then
+							if d[g] == Objs[Par] then
 								
 								Par = Par.Parent
 								
@@ -683,11 +683,11 @@ local function CreateObjs( Parent, Table, InstanceRefs, Objs )
 							
 						end
 						
-						if Objs[ Par.Parent ] then Failed = true end
+						if Objs[Par.Parent] then Failed = true end
 						
 						if not Failed then
 							
-							a[ c ] = e
+							a[c] = e
 							
 							break
 							
@@ -695,9 +695,9 @@ local function CreateObjs( Parent, Table, InstanceRefs, Objs )
 						
 					end
 					
-					if not a[ c ] then
+					if not a[c] then
 						
-						warn( "Was unable to sync " .. a:GetFullName( ) .. "'s " .. c )
+						warn("Was unable to sync " .. a:GetFullName() .. "'s " .. c)
 						
 					end
 					
@@ -707,53 +707,53 @@ local function CreateObjs( Parent, Table, InstanceRefs, Objs )
 			
 		end
 		
-		ReplaceObjs( Parent, OriginalParent ~= game and OriginalParent or nil )
+		ReplaceObjs(Parent, OriginalParent ~= game and OriginalParent or nil)
 		
-		Parent:Destroy( )
+		Parent:Destroy()
 		
 		for k, v in ipairs(Sel) do
 			
-			if type( v ) == "string" then
+			if type(v) == "string" then
 				
-				Sel[ k ] = CollectionService:GetTagged( v )[ 1 ]
+				Sel[k] = CollectionService:GetTagged(v)[1]
 				
 			end
 			
 		end
 		
-		Selection:Set( Sel )
+		Selection:Set(Sel)
 		
 		for _, v in ipairs(Sel) do
 			
 			local Old = v.Parent
 			
-			v.Parent = game:GetService( "ReplicatedStorage" )
+			v.Parent = game:GetService("ReplicatedStorage")
 			
 			v.Parent = Old
 			
 		end
 		
-		Selection:Set( Sel )
+		Selection:Set(Sel)
 		
 	end
 	
 end
 
-local ExcludedClasses = { MeshPart = true, UnionOperation = true }
+local ExcludedClasses = {MeshPart = true, UnionOperation = true}
 
-local function SyncObjs( Model, SyncTable, Sync, InstanceRefs, Objs, Dupes )
+local function SyncObjs(Model, SyncTable, Sync, InstanceRefs, Objs, Dupes)
 	
-	if CollectionService:HasTag( Model, "ForceNoSync" ) then
+	if CollectionService:HasTag(Model, "ForceNoSync") then
 		
 		return
 		
 	end
 	
-	for a, b in pairs( ExcludedClasses ) do
+	for a, b in pairs(ExcludedClasses) do
 		
-		if Model:IsA( a ) then
+		if Model:IsA(a) then
 			
-			warn( "Failed to sync " .. Model:GetFullName( ) .. " - " .. Model.ClassName .. " cannot be recreated" )
+			warn("Failed to sync " .. Model:GetFullName() .. " - " .. Model.ClassName .. " cannot be recreated")
 			
 			return
 					
@@ -763,31 +763,31 @@ local function SyncObjs( Model, SyncTable, Sync, InstanceRefs, Objs, Dupes )
 	
 	local First = InstanceRefs == nil
 	
-	Objs = Objs or { }
+	Objs = Objs or {}
 	
-	InstanceRefs = InstanceRefs or { }
+	InstanceRefs = InstanceRefs or {}
 	
-	Sync = Sync or CollectionService:HasTag( Model, "ForceSync" ) or Model:IsA( "LuaSourceContainer" )
+	Sync = Sync or CollectionService:HasTag(Model, "ForceSync") or Model:IsA("LuaSourceContainer")
 	
-	local MySyncTable = { }
+	local MySyncTable = {}
 	
 	local Num
 	
 	if Sync then
 		
-		local Ran, Error = xpcall( function ( )
+		local Ran, Error = xpcall(function()
 			
-			local Modified, FoundInstances = GetModifiedProperties( Model, InstanceRefs )
+			local Modified, FoundInstances = GetModifiedProperties(Model, InstanceRefs)
 			
-			if Dupes[ tostring( Model ) ] > 1 then
+			if Dupes[tostring(Model)] > 1 then
 				
-				Num = GetUUID( Model )
+				Num = GetUUID(Model)
 				
 			end
 			
-			if Model:IsA( "LuaSourceContainer" ) then
+			if Model:IsA("LuaSourceContainer") then
 				
-				SyncTable[ ( Model.Name == Model.ClassName and Model.Name or Model.Name .. "." .. Model.ClassName ) .. ( Num and "%" .. Num or "" ) .. ".lua" ] = Model.Source
+				SyncTable[(Model.Name == Model.ClassName and Model.Name or Model.Name .. "." .. Model.ClassName) .. (Num and "%" .. Num or "") .. ".lua"] = Model.Source
 				
 			end
 			
@@ -795,17 +795,17 @@ local function SyncObjs( Model, SyncTable, Sync, InstanceRefs, Objs, Dupes )
 				
 				for k, Tag in ipairs(Modified.Tags) do
 					
-					if Tag:sub( 1, 4 ) == "I2F_" then
+					if Tag:sub(1, 4) == "I2F_" then
 						
-						Modified.Tags[ k ] = Modified[ #Modified ]
+						Modified.Tags[k] = Modified[#Modified]
 						
-						Modified.Tags[ #Modified ] = nil
+						Modified.Tags[#Modified] = nil
 						
 						if #Modified.Tags == 0 then
 							
 							Modified.Tags = nil
 							
-							if not next( Modified ) then
+							if not next(Modified) then
 								
 								Modified = nil
 								
@@ -821,40 +821,40 @@ local function SyncObjs( Model, SyncTable, Sync, InstanceRefs, Objs, Dupes )
 				
 			end
 			
-			if type( Modified ) == "string" then return Modified end
+			if type(Modified) == "string" then return Modified end
 			
-			Objs[ Model ] = { ( Model.Name == Model.ClassName and Model.Name or Model.Name .. "." .. Model.ClassName ) .. ( Num and "%" .. Num or "" ) }
+			Objs[Model] = {(Model.Name == Model.ClassName and Model.Name or Model.Name .. "." .. Model.ClassName) .. (Num and "%" .. Num or "")}
 			
-			if not Model:IsA( "LuaSourceContainer" ) or Modified or FoundInstances then
+			if not Model:IsA("LuaSourceContainer") or Modified or FoundInstances then
 				
-				local Properties = { Modified }
+				local Properties = {Modified}
 				
-				Objs[ Model ][ 2 ] = Properties
+				Objs[Model][2] = Properties
 				
-				SyncTable[ ( Model.Name == Model.ClassName and Model.Name or Model.Name .. "." .. Model.ClassName ) .. ( Num and "%" .. Num or "" ) .. ".properties" ] = Properties
+				SyncTable[(Model.Name == Model.ClassName and Model.Name or Model.Name .. "." .. Model.ClassName) .. (Num and "%" .. Num or "") .. ".properties"] = Properties
 				
 				
 			end
 			
-		end, CoroutineErrorHandling.ErrorHandler )
+		end, CoroutineErrorHandling.ErrorHandler)
 		
 		if not Ran then
-			warn( CoroutineErrorHandling.GetError(Error) )
+			warn(CoroutineErrorHandling.GetError(Error))
 		elseif Error then
-			warn( Error )
+			warn(Error)
 		end
 		
 	end
 		
-	local Kids = Model == game and SyncLocations or Model:GetChildren( )
+	local Kids = Model == game and SyncLocations or Model:GetChildren()
 	
-	local Dupes = { }
+	local Dupes = {}
 	
 	for _, Kid in ipairs(Kids) do
 		
-		if not CollectionService:HasTag( Kid, "ForceNoSync" ) and (Sync or CollectionService:HasTag( Kid, "ForceSync" ) or Kid:IsA( "LuaSourceContainer" )) then
+		if not CollectionService:HasTag(Kid, "ForceNoSync") and (Sync or CollectionService:HasTag(Kid, "ForceSync") or Kid:IsA("LuaSourceContainer")) then
 			
-			Dupes[ tostring( Kid ) ] = ( Dupes[ tostring( Kid ) ] or 0 ) + 1
+			Dupes[tostring(Kid)] = (Dupes[tostring(Kid)] or 0) + 1
 			
 		end
 		
@@ -862,29 +862,29 @@ local function SyncObjs( Model, SyncTable, Sync, InstanceRefs, Objs, Dupes )
 	
 	for _, Kid in ipairs(Kids) do
 		
-		SyncObjs( Kid, MySyncTable, Sync, InstanceRefs, Objs, Dupes )
+		SyncObjs(Kid, MySyncTable, Sync, InstanceRefs, Objs, Dupes)
 		
 	end
 	
-	if next( MySyncTable ) then
+	if next(MySyncTable) then
 		
-		SyncTable[ ( Model.Name == Model.ClassName and Model.Name or Model.Name .. "." .. Model.ClassName ) .. ( Num and "%" .. Num or "" ) ] = MySyncTable
+		SyncTable[(Model.Name == Model.ClassName and Model.Name or Model.Name .. "." .. Model.ClassName) .. (Num and "%" .. Num or "")] = MySyncTable
 		
 	end
 	
 	if First then
 		
-		for a, b in pairs( InstanceRefs ) do
+		for a, b in pairs(InstanceRefs) do
 			
-			for c, d in pairs( b ) do
+			for c, d in pairs(b) do
 				
-				local Path = { }
+				local Path = {}
 				
 				local Par = d
 				
-				while Objs[ Par ] do
+				while Objs[Par] do
 					
-					table.insert( Path, 1, Objs[ Par ][ 1 ] )
+					table.insert(Path, 1, Objs[Par][1])
 					
 					Par = Par.Parent
 					
@@ -892,17 +892,17 @@ local function SyncObjs( Model, SyncTable, Sync, InstanceRefs, Objs, Dupes )
 				
 				if #Path == 0 then
 					
-					warn( a:GetFullName( ) .. " is using a fuzzy reference in the " .. c .. " property, may cause issues if multiple objects within it's parent have the same name" )
+					warn(a:GetFullName() .. " is using a fuzzy reference in the " .. c .. " property, may cause issues if multiple objects within it's parent have the same name")
 					
-					Objs[ a ][ 2 ][ 2 ] = Objs[ a ][ 2 ][ 2 ] or { }
+					Objs[a][2][2] = Objs[a][2][2] or {}
 					
-					Objs[ a ][ 2 ][ 2 ][ c ] = "local Obj = ... return " .. GetRelativePath( a, d )
+					Objs[a][2][2][c] = "local Obj = ... return " .. GetRelativePath(a, d)
 					
 				else
 					
-					Objs[ a ][ 2 ][ 2 ] = Objs[ a ][ 2 ][ 2 ] or { }
+					Objs[a][2][2] = Objs[a][2][2] or {}
 					
-					Objs[ a ][ 2 ][ 2 ][ c ] = Path
+					Objs[a][2][2][c] = Path
 					
 				end
 				
@@ -910,19 +910,19 @@ local function SyncObjs( Model, SyncTable, Sync, InstanceRefs, Objs, Dupes )
 			
 		end
 		
-		return ToJSON( SyncTable )
+		return ToJSON(SyncTable)
 		
 	end
 	
 end
 
-local Toolbar = plugin:CreateToolbar( "InstToFile" )
+local Toolbar = plugin:CreateToolbar("InstToFile")
 
 local CurrentSync
 
-local I2F = Toolbar:CreateButton( "Export", "Export from Roblox to Windows", "" )
+local I2F = Toolbar:CreateButton("Export", "Export from Roblox to Windows", "")
 
-local F2I = Toolbar:CreateButton( "Import", "Import from Windows to Roblox", "" )
+local F2I = Toolbar:CreateButton("Import", "Import from Windows to Roblox", "")
 
 I2F.ClickableWhenViewportHidden = true
 
@@ -938,43 +938,43 @@ for a = 1, 2 do
 	
 	local Syncing
 	
-	Button.Click:Connect( function ( )
+	Button.Click:Connect(function()
 		
 		if not Syncing then
 			
-			local Mine = { }
+			local Mine = {}
 			
 			CurrentSync = Mine
 			
 			Syncing = true
 			
-			Button:SetActive( true )
+			Button:SetActive(true)
 			
-			local json = a == 1 and SyncObjs( game, { } ) or nil
+			local json = a == 1 and SyncObjs(game, {}) or nil
 			
-			if a == 1 and json == false then print( "[InstToFile] Nothing to sync" ) return end
+			if a == 1 and json == false then print("[InstToFile] Nothing to sync") return end
 			
-			print( "[InstToFile] Connecting to local server" )
+			print("[InstToFile] Connecting to local server")
 			
 			while CurrentSync == Mine do
 				
-				local Ran, Error = pcall( function ( )
+				local Ran, Error = pcall(function()
 					
-					return game.HttpService:GetAsync( "http://localhost:8888" )
+					return game.HttpService:GetAsync("http://localhost:8888")
 					
-				end )
+				end)
 				
 				if not Ran or Error ~= "active" then
 					
 					if Connected then
 						
-						Error = Error:lower( )
+						Error = Error:lower()
 						
-						if Error:find( "error" ) and not Error:find( "timeout" ) then
+						if Error:find("error") and not Error:find("timeout") then
 							
-							print( Error )
+							print(Error)
 							
-							wait( 1 )
+							wait(1)
 							
 						end
 						
@@ -986,49 +986,49 @@ for a = 1, 2 do
 					
 					Connected = true
 					
-					print( "[InstToFile] Syncing to " .. ( a == 1 and "Files" or "Instances" ) )
+					print("[InstToFile] Syncing to " .. (a == 1 and "Files" or "Instances"))
 					
 					if CurrentSync ~= Mine then break end
 					
-					local Ran, Error = pcall( function ( )
+					local Ran, Error = pcall(function()
 						
 						if a == 1 then
 							
-							local Ran, Error = pcall( function ( ) return HttpService:RequestAsync{ Url = "http://localhost:8888/?placeid=" .. PlaceId, Body = json, Method = "POST" } end )
+							local Ran, Error = pcall(function() return HttpService:RequestAsync{Url = "http://localhost:8888/?placeid=" .. PlaceId, Body = json, Method = "POST"} end)
 							
-							if not Ran then error( Error ) end
+							if not Ran then error(Error) end
 							
-							if not Error.Success then error( Error.StatusMessage ) end
+							if not Error.Success then error(Error.StatusMessage) end
 							
 							return Error.Body
 							
 						else
 							
-							local Ran, Error = pcall( function ( ) return HttpService:RequestAsync{ Url = "http://localhost:8888/?placeid=" .. ( game:GetService( "ReplicatedStorage" ):FindFirstChild( "SyncPlaceId" ) and game:GetService( "ReplicatedStorage" ):FindFirstChild( "SyncPlaceId" ).Value or PlaceId ) .. "\\", Method = "GET" } end )
+							local Ran, Error = pcall(function() return HttpService:RequestAsync{Url = "http://localhost:8888/?placeid=" .. (game:GetService("ReplicatedStorage"):FindFirstChild("SyncPlaceId") and game:GetService("ReplicatedStorage"):FindFirstChild("SyncPlaceId").Value or PlaceId) .. "\\", Method = "GET"} end)
 							
-							if not Ran then error( Error ) end
+							if not Ran then error(Error) end
 							
-							if not Error.Success then error( Error.StatusMessage ) end
+							if not Error.Success then error(Error.StatusMessage) end
 							
 							return Error.Body
 							
 						end
 						
-					end )
+					end)
 					
-					if Ran and ( ( a == 1 and Error == "synced" ) or ( a == 2 and Error:sub( 1, 6 ) ~= "failed" ) ) then
+					if Ran and ((a == 1 and Error == "synced") or (a == 2 and Error:sub(1, 6) ~= "failed")) then
 						
 						if a == 2 then
 							
-							local Ran, Error = xpcall( CreateObjs, CoroutineErrorHandling.ErrorHandler, game, Error )
+							local Ran, Error = xpcall(CreateObjs, CoroutineErrorHandling.ErrorHandler, game, Error)
 							
 							if Ran then
 								
-								print( "[InstToFile] Successfully synced" )
+								print("[InstToFile] Successfully synced")
 								
 								CurrentSync = nil
 								
-								Button:SetActive( false )
+								Button:SetActive(false)
 								
 								Syncing = nil
 								
@@ -1036,7 +1036,7 @@ for a = 1, 2 do
 								
 							else
 								
-								print( "[InstToFile] Error occured when syncing - " .. CoroutineErrorHandling.GetError(Error) )
+								print("[InstToFile] Error occured when syncing - " .. CoroutineErrorHandling.GetError(Error))
 								
 								break
 								
@@ -1044,11 +1044,11 @@ for a = 1, 2 do
 							
 						else
 							
-							print( "[InstToFile] Successfully synced" )
+							print("[InstToFile] Successfully synced")
 							
 							CurrentSync = nil
 							
-							Button:SetActive( false )
+							Button:SetActive(false)
 							
 							Syncing = nil
 							
@@ -1058,7 +1058,7 @@ for a = 1, 2 do
 						
 					else
 						
-						print( "[InstToFile] Error occured when syncing - " .. Error:sub( 8 ) )
+						print("[InstToFile] Error occured when syncing - " .. Error:sub(8))
 						
 						break
 						
@@ -1066,13 +1066,13 @@ for a = 1, 2 do
 					
 				end
 				
-				wait( 0.1 )
+				wait(0.1)
 				
 			end
 			
 			Syncing = nil
 			
-			Button:SetActive( false )
+			Button:SetActive(false)
 			
 		else
 			
@@ -1080,14 +1080,14 @@ for a = 1, 2 do
 			
 			Syncing = nil
 			
-			I2F:SetActive( false )
+			I2F:SetActive(false)
 			
-			F2I:SetActive( false )
+			F2I:SetActive(false)
 			
-			print( "[InstToFile] Stopped syncing" )
+			print("[InstToFile] Stopped syncing")
 			
 		end
 		
-	end )
+	end)
 	
 end
